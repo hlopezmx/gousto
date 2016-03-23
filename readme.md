@@ -25,15 +25,17 @@ So, some examples of how to access it via browser are:
 
 ###1.2 USING THE SOURCE CODE
 
-1. Get the API source code
+* Get the API source code
 ```
 	git clone https://github.com/hlopezmx/gousto.git
 ```
-2. Update the libraries using: composer update
+* Update the libraries using: 
+```
+composer update
+```
+* Give permissions to the storage folder (_chmod -R 777 storage_), as CSV data files are stored in the _/storage/data_ folder. 
 
-3. Give permissions to the storage folder (_chmod -R 777 storage_), as CSV data files are stored in the _/storage/data_ folder. 
-
-4. if needed, add the .htacess file at the project's root, with content like this:
+* if needed, add the .htacess file at the project's root, with content like this:
 
 ```
 RewriteEngine On
@@ -80,7 +82,7 @@ On the other hand, when a recipe is being updated/created, the API doesn't force
 	
 ##4. NOTES TO CONSIDER
 
-4.1 The MVC architecture includes modeling the data. Alhough I created a Recipe class (\App\Recipe) to comply with this, it is just a collection of properties without logic attached to it, simply because this is only a simplistic scenario for the API. At the end, loading the data from the CSV into an array and then instantiating the objects to immediately translate them to JSON didn't make much sense. On the other hand, mapping from the CSV into an array with keys was stright forward.
+**4.1** The MVC architecture includes modeling the data. Alhough I created a Recipe class (\App\Recipe) to comply with this, it is just a collection of properties without logic attached to it, simply because this is only a simplistic scenario for the API. At the end, loading the data from the CSV into an array and then instantiating the objects to immediately translate them to JSON didn't make much sense. On the other hand, mapping from the CSV into an array with keys was stright forward.
 
 Having in mind that micro-services are intended to provide fast, simple, reliable and scalable solutions, I have opted to not use the Recipe class and work directly with the loaded array in the Controller which is faster.
 
@@ -94,9 +96,9 @@ However, I have kept the Recipe class and created one route to serve as a proof 
 
 Being a scalable solution, when the business logic and requiremens evolve into something more complicated, it will be viable to make use and extend the Recipe model.
 
-4.2 An extra CSV file has been included (_/storage/data/ratings.csv_) to store the ratings received through _/recipes/{id}/rates/{rating}_.
+**4.2** An extra CSV file has been included (_/storage/data/ratings.csv_) to store the ratings received through _/recipes/{id}/rates/{rating}_.
 
-4.3 There is another extra route defined to support the API. The _/recipes/cuisines_ route is set simply to capture when a cuisine has not been given (i.e _/recipes/cuisines/{cuisine}_). If we don't capture this, the route would be confused with /recipes/{id} generating a missleading 'Recipe not found.' message. Instead, we return the 'A cuisine must be specified.' message, which makes more sense.
+**4.3** There is another extra route defined to support the API. The _/recipes/cuisines_ route is set simply to capture when a cuisine has not been given (i.e _/recipes/cuisines/{cuisine}_). If we don't capture this, the route would be confused with /recipes/{id} generating a missleading 'Recipe not found.' message. Instead, we return the 'A cuisine must be specified.' message, which makes more sense.
 
 
 | Verb | Path                         | Controller                             | Action                        |
@@ -106,12 +108,12 @@ Being a scalable solution, when the business logic and requiremens evolve into s
 
 ##5. HOW CAN THIS BE IMPROVED?
 
-*If the application evolves, it would make sense to make use of the Recipe Model.
+* If the application evolves, it would make sense to make use of the Recipe Model.
 
-*Add security measurements, specially when inserting/updating data
+* Add security measurements, specially when inserting/updating data
 
-*Add exceptions handling, specially for the csv file interaction
+* Add exceptions handling, specially for the csv file interaction
 
-*Include logging to events.
+* Include logging to events.
 
-*When using pagination, include the page number and links to the previous and next pages.
+* When using pagination, include the page number and links to the previous and next pages.
