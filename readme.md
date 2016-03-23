@@ -82,7 +82,7 @@ On the other hand, when a recipe is being updated/created, the API doesn't force
 	
 ##4. NOTES TO CONSIDER
 
-**4.1** The MVC architecture includes modeling the data. Alhough I created a Recipe class (\App\Recipe) to comply with this, it is just a collection of properties without logic attached to it, simply because this is only a simplistic scenario for the API. At the end, loading the data from the CSV into an array and then instantiating the objects to immediately translate them to JSON didn't make much sense. On the other hand, mapping from the CSV into an array with keys was stright forward.
+**4.1** The MVC architecture includes modeling the data. Alhough I created a Recipe class (\App\Recipe) to comply with this, it is just a collection of properties without logic attached to it, because this is only a simplistic scenario for the API. At the end, not having a database and therefore not making a proper use of eloquent, but instead loading the data from the CSV into an array and then instantiating the objects to immediately translate them to JSON didn't make much sense. On the other hand, mapping from the CSV into an array with keys was stright forward.
 
 Having in mind that micro-services are intended to provide fast, simple, reliable and scalable solutions, I have opted to not use the Recipe class and work directly with the loaded array in the Controller which is faster.
 
@@ -110,9 +110,11 @@ Being a scalable solution, when the business logic and requiremens evolve into s
 
 * If the application evolves, it would make sense to make use of the Recipe Model.
 
-* Add security measurements, specially when inserting/updating data
+* Add security measurements, specially when inserting/updating data.
 
-* Add exceptions handling, specially for the csv file interaction
+* Add exceptions handling, specially for the csv file interaction.
+
+* Use a framework compatible with an autoscaling solution for micro-services (e.g. Node.js for AWS Lamda)
 
 * Include logging to events.
 
