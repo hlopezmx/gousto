@@ -1,21 +1,117 @@
-## Lumen PHP Framework
+#Recipes API Test
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+##1. HOW TO USE THE SOLUTION
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+The requested API has been developed using the Lumen micro-framework. I have made the source code available via GitHub, and has as well been published into an EC2 AWS instance.
 
-## Official Documentation
+###1.1 USING THE PUBLISHED API
 
-Documentation for the framework can be found on the [Lumen website](http://lumen.laravel.com/docs).
+The API has been published into an EC2 instance located at http://52.50.189.16/
 
-## Security Vulnerabilities
+It includes the following routes:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+| Verb | Path                         | Controller                             | Action              |
+|------|------------------------------|----------------------------------------|---------------------|
+| GET  | /recipes/{id}                | App\Http\Controllers\RecipesController | getRecipeById       |
+| GET  | /recipes/cuisines/{cuisine}  | App\Http\Controllers\RecipesController | getRecipesByCuisine |
+| POST | /recipes/{id}/rates/{rating} | App\Http\Controllers\RecipesController | rateRecipe          |
+| PUT  | /recipes/{id}                | App\Http\Controllers\RecipesController | updateRecipe        |
+| POST | /recipes                     | App\Http\Controllers\RecipesController | addRecipe           |
 
-### License
+So, some examples of how to access it via browser are:
+  1. http://52.50.189.16/recipes/3 to return the recipe with id 3 in JSON format.
+  2. http://52.50.189.16/recipes/cuisines/british?page=2 to return the second page of british cuisine recipes. Note the page size is set to 2 recipes.
 
-The Lumen framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+
+###1.2 USING THE SOURCE CODE
+
+1. Get the API source code
+```
+	git clone https://github.com/hlopezmx/gousto.git
+```
+2. Update the libraries using: composer update
+
+3. Give permissions to the storage folder (_chmod -R 777 storage_), as CSV data files are stored in the _/storage/data_ folder. 
+
+4. if needed, add the .htacess file at the project's root, with content like this:
+
+```
+RewriteEngine On
+
+RewriteCond %{THE_REQUEST} /public/([^\s?]*) [NC]
+
+RewriteRule ^ %1 [L,NE,R=302]
+
+RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
+```
+
+###1.3 UNIT TESTING
+
+The solution includes a testing file (/tests/GoustoAPITest.php) with 6 tests: one for each route, plus another to test the CSV importing. Some tests include more than one assertion, to test both sucesses and expected errors.
+
+To execute the unit testing, just run phpunit in the project folder. Below is the sample output showing successful testing:
+
+```
+C:\Users\hlt\PhpstormProjects\gousto>vendor\bin\phpunit
+
+PHPUnit 4.8.24 by Sebastian Bergmann and contributors.
+
+......
+
+Time: 1.05 seconds, Memory: 8.75Mb
+ 
+OK (6 tests, 11 assertions)
+```
+
+	
+##2. ABOUT THE FRAMEWORK SELECTION
+The solution has been developed using the Lumen micro-framework v5.2. It has been selected because it is based in the Laravel framework, but optimised for micro-services and APIs. As described in Lumen's documentation: _"Lumen 5.2 represents a shift on slimming Lumen to focus solely on serving stateless, JSON APIs. As such, sessions and views are no longer included with the framework"_, improving its performance.
+
+I consider Laravel & Lumen are very powerful frameworks. Moreover, I understand that your monolithic application has been developed in Laravel, so by choosing a Laravel based framework, my intention is to demonstrate my capability to translate your existent code into a different technology if needed, to evolve into a micro-services architecture, for example.
+
+
+##3. HOW THIS API FEEDS MULTIPLE CONSUMERS
+
+The REST API makes use of standard HTTP protocol and verbs (e.g. GET, POST, PUT, ...), facilitating CRUD activities. In addition, the returned data is encoded in JSON. These features are used practicaly by any modern tool (e.g. other websites, mobiles, etc.). 
+
+In the proposed API, when data is returned, it includes all the information for the recipe(s). In the event that a consumer only requires part of it (e.g. only title and calaories), the rest could be simply dismissed.
+
+On the other hand, when a recipe is being updated/created, the API doesn't force the caller to send data for all the recipe properties. This way the API consumers won't have to be worried about sending data they don't handle. In the case of the ratings, the API forces to use numeric values between 1 and 5.
+	
+##4. NOTES TO CONSIDER
+
+4.1 The MVC architecture includes modeling the data. Alhough I created a Recipe class (\App\Recipe) to comply with this, it is just a collection of properties without logic attached to it, simply because this is only a simplistic scenario for the API. At the end, loading the data from the CSV into an array and then instantiating the objects to immediately translate them to JSON didn't make much sense. On the other hand, mapping from the CSV into an array with keys was stright forward.
+
+Having in mind that micro-services are intended to provide fast, simple, reliable and scalable solutions, I have opted to not use the Recipe class and work directly with the loaded array in the Controller which is faster.
+
+However, I have kept the Recipe class and created one route to serve as a proof of concept:
+
+| Verb | Path                         | Controller                             | Action                        |
+|------|------------------------------|----------------------------------------|-------------------------------|
+| GET  | /recipes2/{id}               | App\Http\Controllers\RecipesController | getRecipeObjectById           |
+
+
+
+Being a scalable solution, when the business logic and requiremens evolve into something more complicated, it will be viable to make use and extend the Recipe model.
+
+4.2 An extra CSV file has been included (_/storage/data/ratings.csv_) to store the ratings received through _/recipes/{id}/rates/{rating}_.
+
+4.3 There is another extra route defined to support the API. The _/recipes/cuisines_ route is set simply to capture when a cuisine has not been given (i.e _/recipes/cuisines/{cuisine}_). If we don't capture this, the route would be confused with /recipes/{id} generating a missleading 'Recipe not found.' message. Instead, we return the 'A cuisine must be specified.' message, which makes more sense.
+
+
+| Verb | Path                         | Controller                             | Action                        |
+|------|------------------------------|----------------------------------------|-------------------------------|
+| GET  | /recipes/cuisines            | App\Http\Controllers\RecipesController | getRecipesByCuisineNotDefined |
+
+
+##5. HOW CAN THIS BE IMPROVED?
+
+*If the application evolves, it would make sense to make use of the Recipe Model.
+
+*Add security measurements, specially when inserting/updating data
+
+*Add exceptions handling, specially for the csv file interaction
+
+*Include logging to events.
+
+*When using pagination, include the page number and links to the previous and next pages.
