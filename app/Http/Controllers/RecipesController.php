@@ -257,7 +257,7 @@ class RecipesController extends Controller
         // we return the new recipe in JSON format
         return $recipe;
     }
-
+    
 
 }
 

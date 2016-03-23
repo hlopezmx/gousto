@@ -9,7 +9,7 @@
 function loadCSV()
 {
     // the real path...
-    $filename = app('path') . "/data/recipes.csv";
+    $filename = storage_path() . "/data/recipes.csv";
 
     // does the file exist?
     if (!file_exists($filename)) return false;
@@ -62,7 +62,7 @@ function saveCSV($header, $recipes, $append)
     $recipes = array_values($recipes);
 
     // the real path...
-    $filename = app('path') . '/data/recipes.csv';
+    $filename = storage_path() . '/data/recipes.csv';
 
     if ($append)
         // open the file in append/create mode
@@ -97,13 +97,13 @@ function saveCSV($header, $recipes, $append)
 function saveRatesCSV($id, $rating)
 {
     // the real path...
-    $filename = app('path') . "/data/ratings.csv";
+    $filename = storage_path() . "/data/ratings.csv";
 
     // open the file in append mode
     $file = fopen($filename, 'ab');
 
     // add the csv line to the file
-    fputcsv($file, compact('id','rating'));
+    fputcsv($file, compact('id', 'rating'));
 
     fclose($file);
 }

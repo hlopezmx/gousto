@@ -23,7 +23,6 @@
 |
 */
 
-
 // 2) Fetch all recipes for a specific cuisine (should paginate)
 $app->get('recipes/cuisines/{cuisine}', 'RecipesController@getRecipesByCuisine');
 
