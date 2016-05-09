@@ -98,13 +98,6 @@ Being a scalable solution, when the business logic and requiremens evolve into s
 
 **4.2** An extra CSV file has been included (_/storage/data/ratings.csv_) to store the ratings received through _/recipes/{id}/rates/{rating}_.
 
-**4.3** There is another extra route defined to support the API. The _/recipes/cuisines_ route is set simply to capture when a cuisine has not been given (i.e _/recipes/cuisines/{cuisine}_). If we don't capture this, the route would be confused with /recipes/{id} generating a missleading 'Recipe not found.' message. Instead, we return the 'A cuisine must be specified.' message, which makes more sense.
-
-
-| Verb | Path                         | Controller                             | Action                        |
-|------|------------------------------|----------------------------------------|-------------------------------|
-| GET  | /recipes/cuisines            | App\Http\Controllers\RecipesController | getRecipesByCuisineNotDefined |
-
 
 ##5. HOW CAN THIS BE IMPROVED?
 
