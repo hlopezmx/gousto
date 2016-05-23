@@ -2,11 +2,10 @@
 
 ##1. HOW TO USE THE SOLUTION
 
-The requested API has been developed using the Lumen micro-framework. I have made the source code available via GitHub, and has as well been published into an EC2 AWS instance.
+The requested API has been developed using the Lumen micro-framework.
 
-###1.1 USING THE PUBLISHED API
+###1.1 USING THE API
 
-The API has been published into an EC2 instance located at http://52.50.189.16/
 
 It includes the following routes:
 
@@ -19,8 +18,8 @@ It includes the following routes:
 | POST | /recipes                     | App\Http\Controllers\RecipesController | addRecipe           |
 
 So, some examples of how to access it via browser are:
-  1. http://52.50.189.16/recipes/3 to return the recipe with id 3 in JSON format.
-  2. http://52.50.189.16/recipes/cuisines/british?page=2 to return the second page of british cuisine recipes. Note the page size is set to 2 recipes.
+  1. http://sampledomain.com/recipes/3 to return the recipe with id 3 in JSON format.
+  2. http://sampledomain.com/recipes/cuisines/british?page=2 to return the second page of british cuisine recipes. Note the page size is set to 2 recipes.
 
 
 ###1.2 USING THE SOURCE CODE
